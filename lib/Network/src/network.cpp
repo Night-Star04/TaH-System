@@ -32,9 +32,13 @@ bool Network::begin(uint8_t MaxConnectNumber)
         led->toggle();
         delay(100);
         led->toggle();
+        delay(100);
+
+        delay(1000);
 
         if (WiFi.status() == WL_CONNECTED)
             isConnect = true;
+
 #ifdef Network_DeBug
         Serial.print(".");
 #endif
@@ -60,7 +64,7 @@ bool Network::begin(uint8_t MaxConnectNumber)
     return true;
 }
 
-GET_Request Network::GET(GET_Config Config[], uint8_t ConfigSize, String path)
+GET_Request Network::GET(GET_Query query[], uint8_t Size, String path)
 {
     if (!isConnect || !isInit || !run())
         return {String(""), String(""), 0, true};
@@ -73,11 +77,11 @@ GET_Request Network::GET(GET_Config Config[], uint8_t ConfigSize, String path)
     int httpResponseCode;
     String url = String(_host) + ":" + String(_port) + path;
 
-    if (Config != NULL)
+    if (query != NULL)
     {
         String postData = "?";
-        for (uint8_t i = 0; i < ConfigSize; i++)
-            postData += (i != 0 ? "&" : "") + Config[i].Arg + "=" + Config[i].data;
+        for (uint8_t i = 0; i < Size; i++)
+            postData += (i != 0 ? "&" : "") + query[i].arg + "=" + query[i].data;
         url += postData;
     }
 
@@ -125,6 +129,12 @@ GET_Request Network::GET(GET_Config Config[], uint8_t ConfigSize, String path)
     return req;
 }
 
+GET_Request Network::GET(String arg, String data, String path)
+{
+    GET_Query query[1] = {
+        {arg, data}};
+    return GET(query, 1, path);
+}
 GET_Request Network::GET(String path)
 {
     return GET(NULL, 0, path);
@@ -149,6 +159,11 @@ bool Network::run(void)
     isConnect = false;
     led->off();
     return false;
+}
+
+String Network::getMacAddress(void)
+{
+    return WiFi.macAddress();
 }
 
 #endif

@@ -1,16 +1,15 @@
 #include <Arduino.h>
 
-#define Network_DeBug
-#define DeBug
+// #define DeBug
 
 #include "network.h"
 Network net("SSID", NULL, "HOST", 80);
-String name = "1F-1";
+String uid = "";
 
 #include <Adafruit_Sensor.h>
 #include <DHT.h>
 uint8_t DHTTYPE = DHT11;
-uint8_t DHTPIN = 2;
+uint8_t DHTPIN = 13;
 DHT dht(DHTPIN, DHTTYPE);
 
 unsigned long lastTime = 0;
@@ -23,8 +22,13 @@ void setup()
     dht.begin();
 
     net.init();
-    while (net.begin())
-        ;
+    while (!net.begin())
+        delay(500);
+
+    while (!net.run())
+        delay(500);
+
+    uid = net.GET("id", net.getMacAddress(), "/api/register").body;
 
     lastTime = millis();
 }
@@ -51,15 +55,17 @@ void loop()
 #ifdef DeBug
             Serial.printf("Humidity: %.2f%% Temperature: %.2f°C\n", h, t);
 #endif
-            GET_Config Config[] = {
+            GET_Query query[] = {
                 {"h", String(h)},
                 {"t", String(t)},
-                {"name", name}};
-            net.GET(Config, 2, "/api/update");
+                {"id", uid}};
+            net.GET(query, 3, "/api/updata");
         }
         else
         {
+#ifdef DeBug
             Serial.println("Network error");
+#endif
         }
 
         lastTime = millis();

@@ -18,9 +18,9 @@
 
 typedef struct
 {
-    String Arg;
+    String arg;
     String data;
-} GET_Config;
+} GET_Query;
 
 typedef struct
 {
@@ -39,10 +39,13 @@ public:
     void init();
     bool begin(uint8_t MaxConnectNumber = 10);
 
-    GET_Request GET(GET_Config Config[], uint8_t ConfigSize, String path = "/");
+    GET_Request GET(GET_Query query[], uint8_t size, String path = "/");
+    GET_Request GET(String arg, String data, String path = "/");
     GET_Request GET(String path = "/");
 
     bool run(void);
+
+    String getMacAddress(void);
 
 protected:
     LED *led;

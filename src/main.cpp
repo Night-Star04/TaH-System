@@ -28,7 +28,7 @@ void setup()
     while (!net.run())
         delay(500);
 
-    uid = net.GET("id", net.getMacAddress(), "/api/register").body;
+    uid = net.GET("id", net.getMacAddress(), "/api/device/register").body;
 
     lastTime = millis();
 }
@@ -57,9 +57,8 @@ void loop()
 #endif
             GET_Query query[] = {
                 {"h", String(h)},
-                {"t", String(t)},
-                {"id", uid}};
-            net.GET(query, 3, "/api/updata");
+                {"t", String(t)}};
+            net.GET(query, 3, "/api/data/" + uid + "/upload");
         }
         else
         {

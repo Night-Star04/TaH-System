@@ -15,7 +15,7 @@ async function GET(req: NextRequest) {
   }
 
   if (IsExistDevice({ id })) {
-    return new NextResponse(GetDeviceInfo(id)?.uid, {
+    return new NextResponse(GetDeviceInfo({ id })?.uid, {
       status: 200,
     });
   }

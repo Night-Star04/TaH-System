@@ -1,13 +1,16 @@
-type DeviceInfo = {
-  id: string;
+type DeviceData = {
   uid: string;
   name?: string;
 };
 
+type DeviceInfo = DeviceData & {
+  id: string;
+};
+
 type RecordInfo = {
-  h: string;
-  t: string;
+  h: number;
+  t: number;
   time: number;
 };
 
-export type { DeviceInfo, RecordInfo };
+export type { DeviceData, DeviceInfo, RecordInfo };

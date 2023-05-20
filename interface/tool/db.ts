@@ -30,10 +30,18 @@ function IsExistDevice({ id, uid }: { id?: string; uid?: string }): boolean {
   else throw new Error("id or uid must be provided");
 }
 
-function GetDeviceInfo(id: string): DeviceInfo | undefined {
+function GetDeviceInfo({
+  id,
+  uid,
+}: {
+  id?: string;
+  uid?: string;
+}): DeviceInfo | undefined {
   const deviceList = GetDeviceList();
 
-  return deviceList.find((device) => device.id === id);
+  if (id) return deviceList.find((device) => device.id === id);
+  else if (uid) return deviceList.find((device) => device.uid === uid);
+  else throw new Error("id or uid must be provided");
 }
 
 function AddDevice(device: DeviceInfo): void {

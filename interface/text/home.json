@@ -1,0 +1,16 @@
+{
+  "title": "Temperature and Humidity Monitoring System",
+  "description": "Dashboard",
+  "SWR": {
+    "loading": "Loading...",
+    "error": "Error loading data."
+  },
+  "noDaviceName": "Unnamed Sensor",
+  "Data": {
+    "t": "Temperature",
+    "h": "Humidity",
+    "time": "Time",
+    "button": "Learn More",
+    "nodata": "No data found."
+  }
+}

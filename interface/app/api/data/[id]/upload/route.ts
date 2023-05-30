@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 
-import { getQuery } from "@/util";
+import { UUID, getQuery } from "@/util";
 import { AddRecord, IsExistDevice } from "@/tool/db";
 
 async function GET(req: NextRequest, context: { params: { id: string } }) {
@@ -23,7 +23,7 @@ async function GET(req: NextRequest, context: { params: { id: string } }) {
     });
   }
 
-  AddRecord(uid, { h: humi, t: temp, time: new Date().getTime() });
+  AddRecord(uid, { uid: UUID(), h: humi, t: temp, time: Date.now() });
 
   return new NextResponse("ok", {
     status: 200,

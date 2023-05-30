@@ -14,14 +14,14 @@ async function GET(req: NextRequest) {
     });
   }
 
-  if (IsExistDevice({ id })) {
-    return new NextResponse(GetDeviceInfo({ id })?.uid, {
+  if (IsExistDevice({ mac: id })) {
+    return new NextResponse(GetDeviceInfo({ mac: id })?.uid, {
       status: 200,
     });
   }
 
   const uid = UUID(8);
-  AddDevice({ id, uid });
+  AddDevice({ mac: id, uid });
 
   return new NextResponse(uid, {
     status: 200,

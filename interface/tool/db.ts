@@ -21,25 +21,25 @@ function GetDeviceList(): Array<DeviceInfo> {
   return ReadJSON<Array<DeviceInfo>>(devicePath);
 }
 
-function IsExistDevice({ id, uid }: { id?: string; uid?: string }): boolean {
+function IsExistDevice({ mac, uid }: { mac?: string; uid?: string }): boolean {
   const deviceList = GetDeviceList();
 
-  if (id) return deviceList.findIndex((device) => device.id === id) !== -1;
+  if (mac) return deviceList.findIndex((device) => device.mac === mac) !== -1;
   else if (uid)
     return deviceList.findIndex((device) => device.uid === uid) !== -1;
   else throw new Error("id or uid must be provided");
 }
 
 function GetDeviceInfo({
-  id,
+  mac,
   uid,
 }: {
-  id?: string;
+  mac?: string;
   uid?: string;
 }): DeviceInfo | undefined {
   const deviceList = GetDeviceList();
 
-  if (id) return deviceList.find((device) => device.id === id);
+  if (mac) return deviceList.find((device) => device.mac === mac);
   else if (uid) return deviceList.find((device) => device.uid === uid);
   else throw new Error("id or uid must be provided");
 }
@@ -47,6 +47,15 @@ function GetDeviceInfo({
 function AddDevice(device: DeviceInfo): void {
   const deviceList = GetDeviceList();
   deviceList.push(device);
+  WriteJSON(devicePath, deviceList);
+}
+
+function EditDevice(uid: string, device: DeviceInfo) {
+  const deviceList = GetDeviceList();
+  const index = deviceList.findIndex((device) => device.uid === uid);
+  if (index === -1) throw new Error("device not found");
+
+  deviceList[index] = device;
   WriteJSON(devicePath, deviceList);
 }
 
@@ -80,4 +89,5 @@ export {
   IsExistDevice,
   AddDevice,
   AddRecord,
+  EditDevice,
 };

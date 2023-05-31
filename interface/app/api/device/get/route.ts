@@ -7,11 +7,16 @@ async function GET(_req: NextRequest) {
   const list = GetDeviceList();
 
   const data = list.map<DeviceData>((v) => {
-    const { uid, name } = v;
-    return { uid, name };
+    const { uid, name, scope } = v;
+    return { uid, name, scope };
   });
 
-  return NextResponse.json(data);
+  return NextResponse.json(data, {
+    status: 200,
+    headers: {
+      "Content-Type": "application/json; charset=utf-8",
+    },
+  });
 }
 
 export { GET };

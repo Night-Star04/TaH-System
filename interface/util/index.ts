@@ -43,4 +43,20 @@ async function fetcher_json<T = any>(url: string): Promise<T> {
   });
 }
 
-export { getQuery, UUID, fetcher_json };
+interface FormDataresult {
+  files: { [key: string]: File };
+  fields: { [key: string]: string };
+}
+
+function FormDataToJSON(formData: FormData): FormDataresult {
+  const result: FormDataresult = { files: {}, fields: {} };
+
+  formData.forEach((value, name) => {
+    if (typeof value === "string") result.fields[name] = value;
+    else result.files[name] = value;
+  });
+
+  return result;
+}
+
+export { getQuery, UUID, fetcher_json, FormDataToJSON };

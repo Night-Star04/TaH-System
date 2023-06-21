@@ -3,6 +3,7 @@
 #define __NETWORK_H__
 #include <Arduino.h>
 #include "LED.h"
+#include "./type.h"
 
 // #define Network_DeBug
 
@@ -16,20 +17,6 @@
 #include <WiFiClient.h>
 #endif
 
-typedef struct
-{
-    String arg;
-    String data;
-} GET_Query;
-
-typedef struct
-{
-    String body;
-    String url;
-    int code;
-    bool isError;
-} GET_Request;
-
 class Network
 {
 public:
@@ -39,9 +26,9 @@ public:
     void init();
     bool begin(uint8_t MaxConnectNumber = 10);
 
-    GET_Request GET(GET_Query query[], uint8_t size, String path = "/");
-    GET_Request GET(String arg, String data, String path = "/");
-    GET_Request GET(String path = "/");
+    HTTP_Request GET(HTTP_Params params[], uint8_t size, String path = "/");
+    HTTP_Request GET(String arg, String data, String path = "/");
+    HTTP_Request GET(String path = "/");
 
     bool run(void);
 

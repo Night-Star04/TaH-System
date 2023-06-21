@@ -64,7 +64,7 @@ bool Network::begin(uint8_t MaxConnectNumber)
     return true;
 }
 
-GET_Request Network::GET(GET_Query query[], uint8_t Size, String path)
+HTTP_Request Network::GET(HTTP_Params query[], uint8_t Size, String path)
 {
     if (!isConnect || !isInit || !run())
         return {String(""), String(""), 0, true};
@@ -72,7 +72,7 @@ GET_Request Network::GET(GET_Query query[], uint8_t Size, String path)
     WiFiClient client;
     HTTPClient http;
 
-    GET_Request req;
+    HTTP_Request req;
     String value;
     int httpResponseCode;
     String url = String(_host) + ":" + String(_port) + path;
@@ -129,13 +129,13 @@ GET_Request Network::GET(GET_Query query[], uint8_t Size, String path)
     return req;
 }
 
-GET_Request Network::GET(String arg, String data, String path)
+HTTP_Request Network::GET(String arg, String data, String path)
 {
-    GET_Query query[1] = {
+    HTTP_Params query[1] = {
         {arg, data}};
     return GET(query, 1, path);
 }
-GET_Request Network::GET(String path)
+HTTP_Request Network::GET(String path)
 {
     return GET(NULL, 0, path);
 }

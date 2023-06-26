@@ -55,10 +55,10 @@ void loop()
 #ifdef DeBug
             Serial.printf("Humidity: %.2f%% Temperature: %.2f°C\n", h, t);
 #endif
-            GET_Query query[] = {
+            HTTP_Params params[] = {
                 {"h", String(h)},
                 {"t", String(t)}};
-            net.GET(query, 3, "/api/data/" + uid + "/upload");
+            net.GET(params, 3, "/api/data/" + uid + "/upload");
         }
         else
         {

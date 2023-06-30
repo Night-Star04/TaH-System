@@ -17,4 +17,18 @@ typedef struct
     bool isError;
 } HTTP_Request;
 
+enum Body_Type
+{
+    none,
+    x_www_form_urlencoded,
+    json,
+    raw
+};
+
+typedef struct
+{
+    String key;
+    String value;
+} Body_Params;
+
 #endif

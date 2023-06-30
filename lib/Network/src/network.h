@@ -30,6 +30,12 @@ public:
     HTTP_Request GET(String arg, String data, String path = "/");
     HTTP_Request GET(String path = "/");
 
+    HTTP_Request POST(HTTP_Params params[], uint8_t size, String path = "/");
+    HTTP_Request POST(Body_Type type, Body_Params body[], uint8_t body_size, String path = "/");
+    HTTP_Request POST(HTTP_Params params[], uint8_t size, Body_Type type, String body, String path = "/");
+    HTTP_Request POST(HTTP_Params params[], uint8_t size, Body_Type type, Body_Params body[], uint8_t body_size, String path = "/");
+    HTTP_Request POST(String path = "/");
+
     bool run(void);
 
     String getMacAddress(void);

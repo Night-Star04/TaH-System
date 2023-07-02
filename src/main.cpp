@@ -1,17 +1,22 @@
 #include <Arduino.h>
+#include "main.h"
 
 // #define DeBug
 
+// =============== Network  ===============
 #include "network.h"
-Network net("SSID", NULL, "HOST", 80);
+Network net(network_ssid, network_password, network_host, network_port);
+bool isUID = false;
 String uid = "";
 
+// ===============  DHT11   ===============
 #include <Adafruit_Sensor.h>
 #include <DHT.h>
 uint8_t DHTTYPE = DHT11;
 uint8_t DHTPIN = 13;
 DHT dht(DHTPIN, DHTTYPE);
 
+// ===============   Time   ===============
 unsigned long lastTime = 0;
 uint16_t delayTime = 60; // seconds
 
@@ -19,16 +24,29 @@ void setup()
 {
     Serial.begin(9600);
 
-    dht.begin();
+    dht.begin(); // DTH11 init
 
-    net.init();
+    net.init(); // Network init
     while (!net.begin())
         delay(500);
 
     while (!net.run())
         delay(500);
 
-    uid = net.GET("id", net.getMacAddress(), "/api/device/register").body;
+    Body_Params body[] = {
+        {"id", net.getMacAddress()},
+    };
+
+    while (!isUID) // Register device get UID
+    {
+        HTTP_Request req = net.POST(json, body, 1, "/api/device/register");
+
+        if (req.code == 200)
+        {
+            uid = req.body;
+            isUID = true;
+        }
+    }
 
     lastTime = millis();
 }
@@ -37,7 +55,7 @@ void loop()
 {
     unsigned long now = millis();
 
-    if (now - lastTime > delayTime * 1000)
+    if (now - lastTime > delayTime * 1000) // Delay 10 seconds
     {
         if (net.run())
         {
@@ -55,9 +73,11 @@ void loop()
 #ifdef DeBug
             Serial.printf("Humidity: %.2f%% Temperature: %.2f°C\n", h, t);
 #endif
+            // ================= Upload data =================
             HTTP_Params params[] = {
                 {"h", String(h)},
                 {"t", String(t)}};
+
             net.GET(params, 3, "/api/data/" + uid + "/upload");
         }
         else

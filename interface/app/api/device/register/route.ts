@@ -1,11 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { UUID, getQuery } from "@/util";
+import { UUID } from "@/util";
 import { IsExistDevice, AddDevice, GetDeviceInfo } from "@/tool/db";
 
-async function GET(req: NextRequest) {
-  const { id } = getQuery(req);
+async function POST(req: NextRequest) {
+  const { headers } = req;
+  if (headers.get("content-type") !== "application/json") {
+    return new NextResponse("Method Not Allowed", {
+      status: 405,
+    });
+  }
 
+  const { id } = await req.json();
   const reg = /^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/gm;
 
   if (!id || !reg.test(id)) {
@@ -28,4 +34,4 @@ async function GET(req: NextRequest) {
   });
 }
 
-export { GET };
+export { POST };

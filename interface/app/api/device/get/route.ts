@@ -3,6 +3,8 @@ import { type NextRequest, NextResponse } from "next/server";
 import type { DeviceData } from "@/interface/db";
 import { GetDeviceList } from "@/tool/db";
 
+const revalidate = 10;
+
 async function GET(_req: NextRequest) {
   const list = GetDeviceList();
 
@@ -19,4 +21,4 @@ async function GET(_req: NextRequest) {
   });
 }
 
-export { GET };
+export { GET, revalidate };

@@ -15,6 +15,8 @@ async function GET(req: NextRequest, context: { params: { id: string } }) {
       return new NextResponse("limit is not a number", { status: 400 });
     if (num < 1)
       return new NextResponse("limit must be greater than 0", { status: 400 });
+    if (num % 1 !== 0)
+      return new NextResponse("limit must be an integer", { status: 400 });
 
     list = list.slice(0, Number(limit));
   }

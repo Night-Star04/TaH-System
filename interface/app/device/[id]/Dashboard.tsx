@@ -6,6 +6,7 @@ import dynamic from "next/dynamic";
 import { Box, Tab, Tabs } from "@mui/material";
 
 const Recode = dynamic(() => import("./Recode"));
+const Chart = dynamic(() => import("./Chart"));
 
 interface TabPanelProps {
   children?: ReactNode;
@@ -43,7 +44,7 @@ function Dashboard({ id }: { id: string }) {
         <Tab label="Recode" value={1} />
       </Tabs>
       <TabPanel value={value} index={0}>
-        Chart
+        <Chart id={id} />
       </TabPanel>
 
       <TabPanel value={value} index={1}>

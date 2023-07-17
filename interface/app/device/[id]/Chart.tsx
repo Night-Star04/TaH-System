@@ -28,11 +28,16 @@ function Gauge(props: GaugeProps) {
     if (!gaugeRef.current) return;
     gaugeRef.current.focus();
 
-    const chart = echarts.init(gaugeRef.current);
+    let chart = echarts.getInstanceByDom(gaugeRef.current);
+    if (!chart) {
+      chart = echarts.init(gaugeRef.current);
+    }
+
     chart.setOption({
       series: series,
     });
-    window.addEventListener("resize", () => chart.resize());
+
+    window.addEventListener("resize", () => chart && chart.resize());
   }, [series]);
 
   return <div ref={gaugeRef} {...props.div} />;
@@ -124,7 +129,7 @@ function Chart({ id }: { id: string }): JSX.Element {
               },
               data: [
                 {
-                  value: data ? data[0].t : 20,
+                  value: data?.[0] ? data[0].t : 20,
                   name: "Temperature",
                 },
               ],
@@ -198,7 +203,7 @@ function Chart({ id }: { id: string }): JSX.Element {
               },
               data: [
                 {
-                  value: data ? data[0].h : 20,
+                  value: data?.[0] ? data[0].h : 20,
                   name: "Humidity",
                 },
               ],

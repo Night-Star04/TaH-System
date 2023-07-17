@@ -48,14 +48,14 @@ void setup()
         }
     }
 
-    lastTime = millis();
+    lastTime = millis() - (delayTime * 1000); // Make sure the first time is executed
 }
 
 void loop()
 {
     unsigned long now = millis();
 
-    if (now - lastTime > delayTime * 1000) // Delay 10 seconds
+    if (now - lastTime > delayTime * 1000) // Delay 60 seconds
     {
         if (net.run())
         {
@@ -67,6 +67,7 @@ void loop()
 #ifdef DeBug
                 Serial.println(F("Failed to read from DHT sensor!"));
 #endif
+                lastTime = now; // Reset time to prevent continuous checking the dht sensor
                 return;
             }
 
@@ -78,7 +79,7 @@ void loop()
                 {"h", String(h)},
                 {"t", String(t)}};
 
-            net.GET(params, 3, "/api/data/" + uid + "/upload");
+            net.GET(params, 2, "/api/data/" + uid + "/upload");
         }
         else
         {
@@ -87,6 +88,6 @@ void loop()
 #endif
         }
 
-        lastTime = millis();
+        lastTime = now;
     }
 }
